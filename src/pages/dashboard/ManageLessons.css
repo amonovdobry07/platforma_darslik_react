@@ -1,0 +1,449 @@
+.manage-lessons {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.ml-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.ml-loading .spinner {
+  color: var(--color-emerald);
+}
+
+/* ============ HEADER ============ */
+.ml-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  margin-bottom: var(--space-lg);
+  background: transparent;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ml-back:hover {
+  color: var(--text-accent);
+}
+
+.ml-back svg {
+  transition: transform var(--transition-fast);
+}
+
+.ml-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.ml-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  flex-wrap: wrap;
+}
+
+.ml-course-name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.25rem 0.75rem;
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  color: var(--text-accent);
+  margin-bottom: var(--space-sm);
+}
+
+.ml-header h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--space-xs);
+}
+
+.ml-header p {
+  color: var(--text-secondary);
+}
+
+/* ============ STATS ============ */
+.ml-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.ml-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: var(--space-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast);
+}
+
+.ml-stat:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.ml-stat strong {
+  font-family: var(--font-heading);
+  font-size: 1.875rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.ml-stat span {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* ============ EMPTY ============ */
+.ml-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+  gap: var(--space-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+}
+
+.ml-empty svg {
+  color: var(--color-emerald);
+  opacity: 0.4;
+  margin-bottom: var(--space-sm);
+}
+
+.ml-empty h3 {
+  color: var(--text-primary);
+  font-size: 1.375rem;
+}
+
+.ml-empty p {
+  color: var(--text-secondary);
+  max-width: 400px;
+  margin-bottom: var(--space-sm);
+}
+
+/* ============ LIST ============ */
+.ml-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.ml-lesson-card {
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: var(--space-md);
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.ml-lesson-card:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: var(--bg-elevated);
+}
+
+.ml-lesson-number {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--color-emerald);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.ml-lesson-info {
+  min-width: 0;
+}
+
+.ml-lesson-title {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+  margin-bottom: var(--space-xs);
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.ml-lesson-meta {
+  display: flex;
+  gap: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.ml-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.ml-meta-item svg {
+  color: var(--color-emerald);
+}
+
+.ml-meta-item.ml-free {
+  color: var(--color-emerald);
+  font-weight: 500;
+}
+
+.ml-meta-item.ml-paid {
+  color: #f59e0b;
+}
+
+.ml-meta-item.ml-paid svg {
+  color: #f59e0b;
+}
+
+/* ============ ACTIONS ============ */
+.ml-lesson-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.ml-action-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.ml-action-btn:hover {
+  background: var(--bg-surface);
+  border-color: var(--color-emerald);
+  color: var(--color-emerald);
+}
+
+.ml-action-delete:hover {
+  border-color: #ef4444;
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* ============ FORM MODAL ============ */
+.ml-form-modal {
+  max-width: 600px !important;
+  text-align: left !important;
+  padding: var(--space-xl) !important;
+}
+
+.ml-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-xl);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.ml-form-header h2 {
+  font-size: 1.375rem;
+  margin: 0;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  background: transparent;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.ml-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.ml-form .form-group {
+  margin-bottom: 0;
+}
+
+.ml-form label {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.form-label-hint {
+  font-weight: 400;
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.ml-form input[type="text"],
+.ml-form input[type="number"],
+.ml-form input[type="url"],
+.ml-form textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  transition: all var(--transition-fast);
+}
+
+.ml-form input:focus,
+.ml-form textarea:focus {
+  outline: none;
+  border-color: var(--color-emerald);
+  background: var(--bg-surface);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+}
+
+.ml-form textarea {
+  resize: vertical;
+  min-height: 100px;
+  line-height: 1.6;
+}
+
+.ml-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-md);
+}
+
+/* ============ CHECKBOX ============ */
+.ml-checkbox {
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-direction: row !important;
+}
+
+.ml-checkbox:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.ml-checkbox input[type="checkbox"] {
+  width: 20px !important;
+  height: 20px !important;
+  margin: 2px 0 0 0 !important;
+  padding: 0 !important;
+  accent-color: var(--color-emerald);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ml-checkbox-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ml-checkbox-content strong {
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.ml-checkbox-content span {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--border-primary);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+  .ml-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .ml-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .ml-lesson-card {
+    grid-template-columns: 50px 1fr;
+    gap: var(--space-sm);
+  }
+
+  .ml-lesson-actions {
+    grid-column: 1 / -1;
+    margin-top: var(--space-sm);
+  }
+
+  .ml-action-btn {
+    flex: 1;
+  }
+
+  .ml-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+    justify-content: center;
+  }
+}
