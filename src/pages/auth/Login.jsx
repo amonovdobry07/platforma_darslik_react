@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { authAPI } from '../../api/auth'
 import useAuthStore from '../../store/authStore'
-import './Auth.css'
+import './auth.css'
 
 function Login() {
   const navigate = useNavigate()
