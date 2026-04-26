@@ -15,7 +15,7 @@ import {
   Loader2
 } from 'lucide-react'
 import { authAPI } from '../../api/auth'
-import './Auth.css'
+import './auth.css'
 
 function Register() {
   const navigate = useNavigate()
