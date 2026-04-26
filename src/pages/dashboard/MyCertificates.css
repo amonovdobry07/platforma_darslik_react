@@ -1,0 +1,215 @@
+.my-certificates {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mcert-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50vh;
+}
+
+.mcert-loading .spinner {
+  color: var(--color-emerald);
+}
+
+/* ============ HEADER ============ */
+.mcert-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-2xl);
+  flex-wrap: wrap;
+}
+
+.mcert-header h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--space-xs);
+}
+
+.mcert-header p {
+  color: var(--text-secondary);
+}
+
+.mcert-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-xl);
+}
+
+.mcert-stat svg {
+  color: var(--color-emerald);
+}
+
+.mcert-stat > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.mcert-stat strong {
+  font-size: 1.75rem;
+  font-weight: 700;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-family: var(--font-heading);
+}
+
+.mcert-stat span {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+/* ============ GRID ============ */
+.mcert-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: var(--space-xl);
+}
+
+/* ============ CARD ============ */
+.mcert-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transition: all var(--transition-fast);
+}
+
+.mcert-card:hover {
+  border-color: rgba(16, 185, 129, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.15);
+}
+
+/* ============ PREVIEW (mini sertifikat) ============ */
+.mcert-preview {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(135deg, #0a0a0a 0%, #111111 100%);
+  border-bottom: 2px solid var(--color-emerald);
+  overflow: hidden;
+}
+
+.mcert-preview-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.mcert-preview-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+
+.mcert-preview-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-lg);
+  gap: var(--space-sm);
+}
+
+.mcert-preview-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--color-lime);
+}
+
+.mcert-preview-icon {
+  color: var(--color-emerald);
+  margin: var(--space-sm) 0;
+}
+
+.mcert-preview-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mcert-preview-course {
+  font-size: 0.875rem;
+  color: var(--color-emerald);
+  font-style: italic;
+}
+
+/* ============ INFO ============ */
+.mcert-info {
+  padding: var(--space-lg);
+}
+
+.mcert-info h3 {
+  font-size: 1.125rem;
+  margin-bottom: var(--space-sm);
+  color: var(--text-primary);
+}
+
+.mcert-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.mcert-meta-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.mcert-meta-item svg {
+  color: var(--color-emerald);
+}
+
+.mcert-id {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.mcert-actions {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.mcert-actions .btn {
+  flex: 1;
+  justify-content: center;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 640px) {
+  .mcert-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .mcert-actions {
+    flex-direction: column;
+  }
+}

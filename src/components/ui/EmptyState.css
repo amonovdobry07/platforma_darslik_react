@@ -1,0 +1,144 @@
+/* ============ ASOSIY KONTAYNER ============ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-3xl) var(--space-lg);
+  gap: var(--space-lg);
+}
+
+.empty-state-compact {
+  padding: var(--space-2xl) var(--space-md);
+  gap: var(--space-md);
+}
+
+/* ============ IKONKA WRAPPER ============ */
+.es-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.es-icon-wrap {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.empty-state-compact .es-icon-wrap {
+  width: 90px;
+  height: 90px;
+}
+
+/* ============ DEKORATIV DOIRALAR ============ */
+.es-circle {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.es-circle-1 {
+  width: 100%;
+  height: 100%;
+  background: var(--gradient-subtle);
+  animation: pulse-slow 3s ease-in-out infinite;
+}
+
+.es-circle-2 {
+  width: 70%;
+  height: 70%;
+  background: rgba(16, 185, 129, 0.08);
+  animation: pulse-slow 3s ease-in-out infinite reverse;
+}
+
+@keyframes pulse-slow {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+/* ============ ASOSIY IKONKA ============ */
+.es-icon {
+  position: relative;
+  z-index: 1;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-surface);
+  border: 2px solid var(--color-emerald);
+  border-radius: 50%;
+  color: var(--color-emerald);
+  box-shadow: 0 8px 32px rgba(16, 185, 129, 0.2);
+}
+
+.empty-state-compact .es-icon {
+  width: 60px;
+  height: 60px;
+}
+
+/* ============ KONTENT ============ */
+.es-content {
+  max-width: 450px;
+}
+
+.es-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-sm);
+  font-family: var(--font-heading);
+}
+
+.empty-state-compact .es-title {
+  font-size: 1.25rem;
+}
+
+.es-description {
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.empty-state-compact .es-description {
+  font-size: 0.875rem;
+}
+
+/* ============ AKSIYA ============ */
+.es-action {
+  margin-top: var(--space-sm);
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 640px) {
+  .empty-state {
+    padding: var(--space-2xl) var(--space-md);
+  }
+
+  .es-icon-wrap {
+    width: 100px;
+    height: 100px;
+  }
+
+  .es-icon {
+    width: 70px;
+    height: 70px;
+  }
+
+  .es-title {
+    font-size: 1.25rem;
+  }
+}

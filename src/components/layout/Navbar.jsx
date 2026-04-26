@@ -9,6 +9,8 @@ import {
   X
 } from 'lucide-react'
 import useAuthStore from '../../store/authStore'
+import NotificationDropdown from '../notifications/NotificationDropdown'
+import ThemeToggle from '../ui/ThemeToggle'
 import './Navbar.css'
 
 function Navbar() {
@@ -55,8 +57,14 @@ function Navbar() {
 
           {/* Desktop Actions */}
           <div className="navbar-actions">
+            {/* 🌞 THEME TOGGLE — har doim ko'rinadi */}
+            <ThemeToggle />
+
             {isAuthenticated ? (
               <>
+                {/* 🔔 BILDIRISHNOMA */}
+                <NotificationDropdown />
+                
                 <Link
                   to={user?.role === 'instructor' ? '/dashboard/instructor' : '/dashboard/student'}
                   className="btn-icon"
@@ -98,6 +106,14 @@ function Navbar() {
             <li><NavLink to="/courses" onClick={closeMenu}>Kurslar</NavLink></li>
             <li><NavLink to="/about" onClick={closeMenu}>Biz haqimizda</NavLink></li>
           </ul>
+
+          <div className="mobile-menu-divider"></div>
+
+          {/* Mobile Theme Toggle */}
+          <div className="mobile-theme-section">
+            <span>Rejim</span>
+            <ThemeToggle />
+          </div>
 
           <div className="mobile-menu-divider"></div>
 

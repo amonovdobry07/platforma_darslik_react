@@ -1,62 +1,72 @@
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
-import { Search, Filter, X, Loader2, BookOpen, SlidersHorizontal } from 'lucide-react'
-import CourseCard from '../components/course/CourseCard'
-import { coursesAPI, categoriesAPI } from '../api/courses'
-import './Courses.css'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import {
+  Search,
+  X,
+  BookOpen,
+  SlidersHorizontal,
+  RotateCcw,
+} from "lucide-react";
+import CourseCard from "../components/course/CourseCard";
+import { coursesAPI, categoriesAPI } from "../api/courses";
+import { CourseCardSkeleton } from "../components/ui/Skeleton";
+import EmptyState from "../components/ui/EmptyState";
+import "./Courses.css";
 
 function Courses() {
-  const [courses, setCourses] = useState([])
-  const [categories, setCategories] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [courses, setCourses] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Filter states
-  const [search, setSearch] = useState('')
-  const [selectedCategory, setSelectedCategory] = useState('')
-  const [selectedLevel, setSelectedLevel] = useState('')
-  const [ordering, setOrdering] = useState('-created_at')
+  const [search, setSearch] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedLevel, setSelectedLevel] = useState("");
+  const [ordering, setOrdering] = useState("-created_at");
 
   // Kategoriyalarni yuklash
   useEffect(() => {
-    categoriesAPI.getAll()
-      .then(data => setCategories(data.results || data))
-      .catch(err => console.error(err))
-  }, [])
+    categoriesAPI
+      .getAll()
+      .then((data) => setCategories(data.results || data))
+      .catch((err) => console.error(err));
+  }, []);
 
   // Kurslarni yuklash (filter o'zgarganda)
   useEffect(() => {
-    setIsLoading(true)
-    const params = {}
-    
-    if (search) params.search = search
-    if (selectedCategory) params.category = selectedCategory
-    if (selectedLevel) params.level = selectedLevel
-    if (ordering) params.ordering = ordering
+    setIsLoading(true);
+    const params = {};
+
+    if (search) params.search = search;
+    if (selectedCategory) params.category = selectedCategory;
+    if (selectedLevel) params.level = selectedLevel;
+    if (ordering) params.ordering = ordering;
 
     const debounce = setTimeout(() => {
-      coursesAPI.getAll(params)
-        .then(data => {
-          setCourses(data.results || data)
-          setIsLoading(false)
+      coursesAPI
+        .getAll(params)
+        .then((data) => {
+          setCourses(data.results || data);
+          setIsLoading(false);
         })
-        .catch(err => {
-          console.error(err)
-          setIsLoading(false)
-        })
-    }, 300)
+        .catch((err) => {
+          console.error(err);
+          setIsLoading(false);
+        });
+    }, 300);
 
-    return () => clearTimeout(debounce)
-  }, [search, selectedCategory, selectedLevel, ordering])
+    return () => clearTimeout(debounce);
+  }, [search, selectedCategory, selectedLevel, ordering]);
 
   const clearFilters = () => {
-    setSearch('')
-    setSelectedCategory('')
-    setSelectedLevel('')
-    setOrdering('-created_at')
-  }
+    setSearch("");
+    setSelectedCategory("");
+    setSelectedLevel("");
+    setOrdering("-created_at");
+  };
 
-  const hasActiveFilters = search || selectedCategory || selectedLevel
+  const hasActiveFilters = search || selectedCategory || selectedLevel;
 
   return (
     <div className="courses-page">
@@ -86,17 +96,14 @@ function Courses() {
               className="search-input"
             />
             {search && (
-              <button 
-                className="search-clear" 
-                onClick={() => setSearch('')}
-              >
+              <button className="search-clear" onClick={() => setSearch("")}>
                 <X size={18} />
               </button>
             )}
           </div>
 
           <button
-            className={`filter-toggle ${isFilterOpen ? 'active' : ''}`}
+            className={`filter-toggle ${isFilterOpen ? "active" : ""}`}
             onClick={() => setIsFilterOpen(!isFilterOpen)}
           >
             <SlidersHorizontal size={18} />
@@ -109,7 +116,7 @@ function Courses() {
         {isFilterOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             className="filters-panel"
           >
@@ -123,8 +130,10 @@ function Courses() {
                   className="filter-select"
                 >
                   <option value="">Barchasi</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </option>
                   ))}
                 </select>
               </div>
@@ -172,25 +181,33 @@ function Courses() {
         {/* ============ RESULTS ============ */}
         <div className="courses-results">
           {isLoading ? (
-            <div className="courses-loading">
-              <Loader2 className="spinner" size={40} />
-              <p>Yuklanmoqda...</p>
+            <div className="courses-grid">
+              {[...Array(6)].map((_, i) => (
+                <CourseCardSkeleton key={i} />
+              ))}
             </div>
           ) : courses.length === 0 ? (
-            <div className="courses-empty">
-              <BookOpen size={64} />
-              <h3>Kurs topilmadi</h3>
-              <p>Boshqa so'z bilan qidirib ko'ring yoki filterni tozalang</p>
-              {hasActiveFilters && (
-                <button className="btn btn-primary" onClick={clearFilters}>
-                  Filterni tozalash
-                </button>
-              )}
-            </div>
+            <EmptyState
+              icon={hasActiveFilters ? Search : BookOpen}
+              title={
+                hasActiveFilters
+                  ? "Kurs topilmadi"
+                  : "Hozircha kurslar yo'q"
+              }
+              description={
+                hasActiveFilters
+                  ? "Qidiruv shartlaringizga mos kurs topilmadi. Boshqa so'z bilan qidirib ko'ring yoki filterlarni tozalang."
+                  : "Tez orada yangi kurslar qo'shiladi. Iltimos keyinroq qaytib keling!"
+              }
+              actionLabel={hasActiveFilters ? "Filterlarni tozalash" : null}
+              actionIcon={RotateCcw}
+              actionOnClick={clearFilters}
+            />
           ) : (
             <>
               <div className="courses-count">
-                <span className="gradient-text">{courses.length}</span> ta kurs topildi
+                <span className="gradient-text">{courses.length}</span> ta kurs
+                topildi
               </div>
 
               <div className="courses-grid">
@@ -203,7 +220,7 @@ function Courses() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default Courses
+export default Courses;

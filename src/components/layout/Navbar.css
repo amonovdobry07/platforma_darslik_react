@@ -281,3 +281,20 @@
     top: 64px;
   }
 }
+
+/* ============ MOBILE THEME SECTION ============ */
+.mobile-theme-section {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  margin: var(--space-md) 0;
+}
+
+.mobile-theme-section span {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}

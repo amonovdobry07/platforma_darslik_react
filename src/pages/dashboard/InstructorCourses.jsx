@@ -11,10 +11,11 @@ import {
   Users,
   Star,
   Loader2,
-  ListVideo  // ← YANGI
+  ListVideo
 } from 'lucide-react'
 import { coursesAPI } from '../../api/courses'
 import useAuthStore from '../../store/authStore'
+import EmptyState from '../../components/ui/EmptyState'
 import './MyCourses.css'
 
 function InstructorCourses() {
@@ -32,7 +33,6 @@ function InstructorCourses() {
   const loadCourses = async () => {
     try {
       const data = await coursesAPI.getAll()
-      // Faqat shu instructor kurslari
       const myCourses = (data.results || data).filter(
         c => c.instructor?.id === user?.id
       )
@@ -87,23 +87,24 @@ function InstructorCourses() {
           <p>Siz yaratgan barcha kurslar</p>
         </div>
 
-        <Link to="/dashboard/instructor/create" className="btn btn-primary">
-          <PlusCircle size={18} />
-          Yangi kurs
-        </Link>
+        {courses.length > 0 && (
+          <Link to="/dashboard/instructor/create" className="btn btn-primary">
+            <PlusCircle size={18} />
+            Yangi kurs
+          </Link>
+        )}
       </motion.div>
 
       {/* Courses */}
       {courses.length === 0 ? (
-        <div className="mc-empty">
-          <BookOpen size={64} />
-          <h3>Hali kurs yaratmagansiz</h3>
-          <p>Birinchi kursingizni yarating va o'quvchilaringiz bilan baham ko'ring</p>
-          <Link to="/dashboard/instructor/create" className="btn btn-primary">
-            <PlusCircle size={18} />
-            Yangi kurs yaratish
-          </Link>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="Birinchi kursingizni yarating"
+          description="O'z bilimingizni boshqalar bilan baham ko'ring va o'qituvchi sifatida ta'lim sohasida o'zingizni namoyon qiling."
+          actionLabel="Yangi kurs yaratish"
+          actionLink="/dashboard/instructor/create"
+          actionIcon={PlusCircle}
+        />
       ) : (
         <div className="instructor-courses-list">
           {courses.map((course, i) => (
@@ -114,7 +115,6 @@ function InstructorCourses() {
               transition={{ duration: 0.4, delay: i * 0.05 }}
               className="ic-card"
             >
-              {/* Thumbnail */}
               <div className="ic-thumbnail">
                 {course.thumbnail ? (
                   <img src={course.thumbnail} alt={course.title} />
@@ -125,7 +125,6 @@ function InstructorCourses() {
                 )}
               </div>
 
-              {/* Info */}
               <div className="ic-info">
                 <div className="ic-category">{course.category?.name}</div>
                 <h3>{course.title}</h3>
@@ -148,7 +147,6 @@ function InstructorCourses() {
                 <div className="ic-price">{formatPrice(course.price)}</div>
               </div>
 
-              {/* Actions */}
               <div className="ic-actions">
                 <button
                   className="ic-action-btn"

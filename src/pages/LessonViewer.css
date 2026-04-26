@@ -449,3 +449,386 @@
     order: -1;
   }
 }
+
+.lesson-viewer {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+/* ============ SIDEBAR ============ */
+.lv-sidebar {
+  border-right: 1px solid var(--border-primary);
+  background: var(--bg-surface);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  overflow-y: auto;
+}
+
+.lv-sidebar-header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--border-primary);
+  background: var(--bg-elevated);
+}
+
+.lv-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-md);
+  transition: all var(--transition-fast);
+}
+
+.lv-back:hover {
+  color: var(--text-accent);
+}
+
+.lv-back svg {
+  transition: transform var(--transition-fast);
+}
+
+.lv-back:hover svg {
+  transform: translateX(-3px);
+}
+
+.lv-course-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: var(--space-md);
+}
+
+.lv-course-title svg {
+  color: var(--color-emerald);
+  flex-shrink: 0;
+}
+
+/* ============ PROGRESS ============ */
+.lv-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.lv-progress-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+
+.lv-progress-header strong {
+  color: var(--text-accent);
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+}
+
+.lv-progress-text {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============ LESSONS LIST ============ */
+.lv-lessons-list {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-sm);
+  gap: 4px;
+}
+
+.lv-lesson-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  text-align: left;
+  transition: all var(--transition-fast);
+}
+
+.lv-lesson-item:hover {
+  background: var(--bg-elevated);
+}
+
+.lv-lesson-item.active {
+  background: var(--gradient-subtle);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.lv-lesson-item.completed .lv-lesson-num {
+  color: var(--color-emerald);
+}
+
+.lv-lesson-status {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.lv-lesson-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.lv-lesson-num {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  margin-bottom: 2px;
+}
+
+.lv-lesson-item.active .lv-lesson-num {
+  color: var(--color-emerald);
+}
+
+.lv-lesson-title {
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  font-weight: 500;
+  margin-bottom: 4px;
+  line-height: 1.4;
+}
+
+.lv-lesson-time {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* ============ MAIN CONTENT ============ */
+.lv-main {
+  padding: var(--space-2xl);
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ============ VIDEO ============ */
+.lv-video-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 */
+  background: #000;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-primary);
+  margin-bottom: var(--space-xl);
+}
+
+.lv-video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.lv-video-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  height: 400px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  color: var(--text-muted);
+  margin-bottom: var(--space-xl);
+}
+
+.lv-video-placeholder svg {
+  color: var(--color-emerald);
+  opacity: 0.5;
+}
+
+/* ============ LESSON CONTENT ============ */
+.lv-content h1 {
+  font-size: 2rem;
+  margin-bottom: var(--space-md);
+}
+
+.lv-meta {
+  display: flex;
+  gap: var(--space-md);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.lv-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.25rem 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+.lv-meta-item svg {
+  color: var(--color-emerald);
+}
+
+.lv-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.8;
+  margin-bottom: var(--space-2xl);
+}
+
+.lv-description p {
+  margin-bottom: var(--space-md);
+}
+
+/* ============ COMPLETE SECTION ============ */
+.lv-complete-section {
+  padding: var(--space-xl);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.lv-complete-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.lv-completed-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-lg);
+  color: var(--color-emerald);
+}
+
+.lv-completed-badge > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.lv-completed-badge strong {
+  font-size: 0.9375rem;
+  color: var(--color-emerald);
+}
+
+.lv-completed-badge span {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+/* ============ NAVIGATION ============ */
+.lv-navigation {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+/* ============ COMPLETION MODAL ============ */
+.lv-completion-modal {
+  text-align: center;
+  max-width: 500px !important;
+  padding: var(--space-2xl) !important;
+}
+
+.lv-trophy {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto var(--space-lg);
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 50%;
+  color: white;
+  box-shadow: 0 20px 60px rgba(251, 191, 36, 0.4);
+  animation: bounce-in 0.6s ease-out;
+}
+
+@keyframes bounce-in {
+  0% { transform: scale(0.3); opacity: 0; }
+  50% { transform: scale(1.1); }
+  70% { transform: scale(0.9); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.lv-completion-modal h2 {
+  font-size: 1.75rem;
+  margin-bottom: var(--space-md);
+}
+
+.lv-completion-modal p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.6;
+}
+
+/* ============ LOADING ============ */
+.lv-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.lv-loading .spinner {
+  color: var(--color-emerald);
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 1024px) {
+  .lesson-viewer {
+    grid-template-columns: 1fr;
+  }
+
+  .lv-sidebar {
+    height: auto;
+    position: relative;
+    border-right: none;
+    border-bottom: 1px solid var(--border-primary);
+  }
+
+  .lv-main {
+    padding: var(--space-lg);
+  }
+
+  .lv-content h1 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .lv-navigation {
+    flex-direction: column;
+  }
+
+  .lv-navigation .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

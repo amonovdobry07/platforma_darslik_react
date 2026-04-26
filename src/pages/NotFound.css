@@ -1,0 +1,223 @@
+.not-found {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-2xl) var(--space-md);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============ BACKGROUND DEKORATSIYA ============ */
+.nf-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.nf-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.3;
+}
+
+.nf-orb-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--color-emerald);
+  top: -200px;
+  left: -200px;
+  animation: float 20s ease-in-out infinite;
+}
+
+.nf-orb-2 {
+  width: 400px;
+  height: 400px;
+  background: var(--color-lime);
+  bottom: -150px;
+  right: -150px;
+  animation: float 15s ease-in-out infinite reverse;
+}
+
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -30px); }
+}
+
+.nf-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(16, 185, 129, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.05) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+}
+
+/* ============ ASOSIY KONTAYNER ============ */
+.nf-container {
+  position: relative;
+  z-index: 1;
+  max-width: 700px;
+  width: 100%;
+  text-align: center;
+}
+
+/* ============ 404 RAQAM ============ */
+.nf-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+.nf-digit {
+  font-family: var(--font-heading);
+  font-size: clamp(8rem, 20vw, 14rem);
+  font-weight: 900;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  letter-spacing: -0.05em;
+}
+
+.nf-zero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-emerald);
+}
+
+/* ============ KONTENT ============ */
+.nf-content {
+  margin-bottom: var(--space-xl);
+}
+
+.nf-content h1 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin-bottom: var(--space-md);
+  font-weight: 700;
+}
+
+.nf-content p {
+  color: var(--text-secondary);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* ============ TUGMALAR ============ */
+.nf-actions {
+  display: flex;
+  gap: var(--space-md);
+  justify-content: center;
+  margin-bottom: var(--space-3xl);
+  flex-wrap: wrap;
+}
+
+/* ============ MASHHUR SAHIFALAR ============ */
+.nf-popular {
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--border-primary);
+}
+
+.nf-popular-title {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 0.5rem 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-lg);
+}
+
+.nf-popular-title svg {
+  color: var(--color-emerald);
+}
+
+.nf-popular-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-md);
+  text-align: left;
+}
+
+.nf-popular-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-md);
+  padding: var(--space-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.nf-popular-card:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+  background: var(--bg-elevated);
+  transform: translateY(-3px);
+}
+
+.nf-popular-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-subtle);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: var(--radius-md);
+  color: var(--color-emerald);
+  flex-shrink: 0;
+}
+
+.nf-popular-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.nf-popular-info strong {
+  color: var(--text-primary);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.nf-popular-info span {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+
+/* ============ MOBILE ============ */
+@media (max-width: 640px) {
+  .nf-number {
+    gap: var(--space-sm);
+  }
+
+  .nf-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nf-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .nf-popular-grid {
+    grid-template-columns: 1fr;
+  }
+}

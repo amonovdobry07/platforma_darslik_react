@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
-import { useParams, useNavigate, Link } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import { toast } from 'sonner'
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+import { toast } from "sonner";
 import {
   ArrowLeft,
   Plus,
@@ -14,170 +14,170 @@ import {
   Loader2,
   BookOpen,
   Eye,
-  EyeOff
-} from 'lucide-react'
-import { coursesAPI } from '../../api/courses'
-import { lessonsAPI } from '../../api/lessons'
-import useAuthStore from '../../store/authStore'
-import './ManageLessons.css'
+  EyeOff,
+  Trophy, // ← YANGI
+} from "lucide-react";
+import { coursesAPI } from "../../api/courses";
+import { lessonsAPI } from "../../api/lessons";
+import useAuthStore from "../../store/authStore";
+import EmptyState from "../../components/ui/EmptyState";
+import "./ManageLessons.css";
 
 function ManageLessons() {
-  const { courseId } = useParams()
-  const navigate = useNavigate()
-  const { user } = useAuthStore()
+  const { courseId } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuthStore();
 
-  const [course, setCourse] = useState(null)
-  const [lessons, setLessons] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [editingLesson, setEditingLesson] = useState(null)
-  const [isSaving, setIsSaving] = useState(false)
-  const [deleteConfirm, setDeleteConfirm] = useState(null)
-  const [isDeleting, setIsDeleting] = useState(false)
+  const [course, setCourse] = useState(null);
+  const [lessons, setLessons] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingLesson, setEditingLesson] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  // Form state
   const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    video_url: '',
-    duration_minutes: '',
-    order: '',
-    is_free: false
-  })
+    title: "",
+    content: "",
+    video_url: "",
+    duration_minutes: "",
+    order: "",
+    is_free: false,
+  });
 
   useEffect(() => {
-    loadData()
-  }, [courseId])
+    loadData();
+  }, [courseId]);
 
   const loadData = async () => {
     try {
-      const courseData = await coursesAPI.getOne(courseId)
-      
-      // Faqat o'z kursini boshqarish
-      if (courseData.instructor?.id !== user?.id) {
-        toast.error("Siz bu kursni boshqara olmaysiz!")
-        navigate('/dashboard/instructor/courses')
-        return
-      }
-      
-      setCourse(courseData)
+      const courseData = await coursesAPI.getOne(courseId);
 
-      const lessonsData = await lessonsAPI.getByCourse(courseId)
-      setLessons(lessonsData.results || lessonsData)
+      if (courseData.instructor?.id !== user?.id) {
+        toast.error("Siz bu kursni boshqara olmaysiz!");
+        navigate("/dashboard/instructor/courses");
+        return;
+      }
+
+      setCourse(courseData);
+
+      const lessonsData = await lessonsAPI.getByCourse(courseId);
+      setLessons(lessonsData.results || lessonsData);
     } catch (error) {
-      toast.error("Ma'lumotlar yuklanmadi")
-      navigate('/dashboard/instructor/courses')
+      toast.error("Ma'lumotlar yuklanmadi");
+      navigate("/dashboard/instructor/courses");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const openCreateForm = () => {
-    setEditingLesson(null)
+    setEditingLesson(null);
     setFormData({
-      title: '',
-      content: '',
-      video_url: '',
-      duration_minutes: '',
+      title: "",
+      content: "",
+      video_url: "",
+      duration_minutes: "",
       order: lessons.length + 1,
-      is_free: false
-    })
-    setShowForm(true)
-  }
+      is_free: false,
+    });
+    setShowForm(true);
+  };
 
   const openEditForm = (lesson) => {
-    setEditingLesson(lesson)
+    setEditingLesson(lesson);
     setFormData({
       title: lesson.title,
       content: lesson.content,
-      video_url: lesson.video_url || '',
+      video_url: lesson.video_url || "",
       duration_minutes: lesson.duration_minutes,
       order: lesson.order,
-      is_free: lesson.is_free
-    })
-    setShowForm(true)
-  }
+      is_free: lesson.is_free,
+    });
+    setShowForm(true);
+  };
 
   const closeForm = () => {
-    setShowForm(false)
-    setEditingLesson(null)
-  }
+    setShowForm(false);
+    setEditingLesson(null);
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     if (!formData.title.trim() || !formData.content.trim()) {
-      toast.error("Sarlavha va kontent majburiy!")
-      return
+      toast.error("Sarlavha va kontent majburiy!");
+      return;
     }
 
-    setIsSaving(true)
+    setIsSaving(true);
     try {
       const data = {
         ...formData,
         duration_minutes: parseInt(formData.duration_minutes) || 0,
         order: parseInt(formData.order) || 0,
-        course: parseInt(courseId)
-      }
+        course: parseInt(courseId),
+      };
 
       if (editingLesson) {
-        await lessonsAPI.update(courseId, editingLesson.id, data)
-        toast.success("Dars yangilandi! ✓")
+        await lessonsAPI.update(courseId, editingLesson.id, data);
+        toast.success("Dars yangilandi! ✓");
       } else {
-        await lessonsAPI.create(courseId, data)
-        toast.success("Yangi dars qo'shildi! 🎉")
+        await lessonsAPI.create(courseId, data);
+        toast.success("Yangi dars qo'shildi! 🎉");
       }
 
-      await loadData()
-      closeForm()
+      await loadData();
+      closeForm();
     } catch (error) {
-      const errors = error.response?.data
+      const errors = error.response?.data;
       if (errors) {
-        const firstError = Object.values(errors)[0]
-        toast.error(Array.isArray(firstError) ? firstError[0] : firstError)
+        const firstError = Object.values(errors)[0];
+        toast.error(Array.isArray(firstError) ? firstError[0] : firstError);
       } else {
-        toast.error("Xatolik yuz berdi")
+        toast.error("Xatolik yuz berdi");
       }
     } finally {
-      setIsSaving(false)
+      setIsSaving(false);
     }
-  }
+  };
 
   const handleDelete = async () => {
-    if (!deleteConfirm) return
+    if (!deleteConfirm) return;
 
-    setIsDeleting(true)
+    setIsDeleting(true);
     try {
-      await lessonsAPI.delete(courseId, deleteConfirm.id)
-      toast.success("Dars o'chirildi")
-      setLessons(lessons.filter(l => l.id !== deleteConfirm.id))
-      setDeleteConfirm(null)
+      await lessonsAPI.delete(courseId, deleteConfirm.id);
+      toast.success("Dars o'chirildi");
+      setLessons(lessons.filter((l) => l.id !== deleteConfirm.id));
+      setDeleteConfirm(null);
     } catch (error) {
-      toast.error("Xatolik yuz berdi")
+      toast.error("Xatolik yuz berdi");
     } finally {
-      setIsDeleting(false)
+      setIsDeleting(false);
     }
-  }
+  };
 
   if (isLoading) {
     return (
       <div className="ml-loading">
         <Loader2 className="spinner" size={40} />
       </div>
-    )
+    );
   }
 
   return (
     <div className="manage-lessons">
-      {/* ============ HEADER ============ */}
+      {/* HEADER */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <button 
+        <button
           type="button"
-          className="ml-back" 
-          onClick={() => navigate('/dashboard/instructor/courses')}
+          className="ml-back"
+          onClick={() => navigate("/dashboard/instructor/courses")}
         >
           <ArrowLeft size={18} />
           Kurslarimga qaytish
@@ -195,43 +195,45 @@ function ManageLessons() {
             <p>Kursingizga darslar qo'shing va boshqaring</p>
           </div>
 
-          <button 
-            className="btn btn-primary"
-            onClick={openCreateForm}
-          >
-            <Plus size={18} />
-            Yangi dars
-          </button>
+          {lessons.length > 0 && (
+            <button className="btn btn-primary" onClick={openCreateForm}>
+              <Plus size={18} />
+              Yangi dars
+            </button>
+          )}
         </div>
 
-        {/* Stats */}
-        <div className="ml-stats">
-          <div className="ml-stat">
-            <strong>{lessons.length}</strong>
-            <span>Jami darslar</span>
+        {/* Stats - faqat darslar bor bo'lsa */}
+        {lessons.length > 0 && (
+          <div className="ml-stats">
+            <div className="ml-stat">
+              <strong>{lessons.length}</strong>
+              <span>Jami darslar</span>
+            </div>
+            <div className="ml-stat">
+              <strong>{lessons.filter((l) => l.is_free).length}</strong>
+              <span>Bepul darslar</span>
+            </div>
+            <div className="ml-stat">
+              <strong>
+                {lessons.reduce((sum, l) => sum + (l.duration_minutes || 0), 0)}
+              </strong>
+              <span>Jami daqiqa</span>
+            </div>
           </div>
-          <div className="ml-stat">
-            <strong>{lessons.filter(l => l.is_free).length}</strong>
-            <span>Bepul darslar</span>
-          </div>
-          <div className="ml-stat">
-            <strong>{lessons.reduce((sum, l) => sum + (l.duration_minutes || 0), 0)}</strong>
-            <span>Jami daqiqa</span>
-          </div>
-        </div>
+        )}
       </motion.div>
 
-      {/* ============ LESSONS LIST ============ */}
+      {/* LESSONS LIST yoki Empty State */}
       {lessons.length === 0 ? (
-        <div className="ml-empty">
-          <BookOpen size={64} />
-          <h3>Hali dars yo'q</h3>
-          <p>Birinchi darsingizni qo'shing va kursingizni boshlang</p>
-          <button className="btn btn-primary" onClick={openCreateForm}>
-            <Plus size={18} />
-            Birinchi dars qo'shish
-          </button>
-        </div>
+        <EmptyState
+          icon={BookOpen}
+          title="Hali dars yo'q"
+          description="Kursingizga birinchi darsni qo'shib, talabalar uchun ta'lim yo'lini boshlang. Video, matn va boshqa ma'lumotlarni qo'shishingiz mumkin."
+          actionLabel="Birinchi dars qo'shish"
+          actionIcon={Plus}
+          actionOnClick={openCreateForm}
+        />
       ) : (
         <div className="ml-list">
           {lessons.map((lesson, i) => (
@@ -274,6 +276,17 @@ function ManageLessons() {
               <div className="ml-lesson-actions">
                 <button
                   className="ml-action-btn"
+                  onClick={() =>
+                    navigate(
+                      `/dashboard/instructor/quiz/${courseId}/${lesson.id}`,
+                    )
+                  }
+                  title="Test boshqaruvi"
+                >
+                  <Trophy size={18} />
+                </button>
+                <button
+                  className="ml-action-btn"
                   onClick={() => openEditForm(lesson)}
                   title="Tahrirlash"
                 >
@@ -292,7 +305,7 @@ function ManageLessons() {
         </div>
       )}
 
-      {/* ============ FORM MODAL ============ */}
+      {/* FORM MODAL */}
       {showForm && (
         <div className="modal-overlay" onClick={closeForm}>
           <motion.div
@@ -302,7 +315,9 @@ function ManageLessons() {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="ml-form-header">
-              <h2>{editingLesson ? 'Darsni tahrirlash' : 'Yangi dars qo\'shish'}</h2>
+              <h2>
+                {editingLesson ? "Darsni tahrirlash" : "Yangi dars qo'shish"}
+              </h2>
               <button className="modal-close" onClick={closeForm}>
                 <X size={20} />
               </button>
@@ -314,7 +329,9 @@ function ManageLessons() {
                 <input
                   type="text"
                   value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, title: e.target.value })
+                  }
                   placeholder="Masalan: Kirish va o'rnatish"
                   required
                   maxLength={200}
@@ -325,7 +342,9 @@ function ManageLessons() {
                 <label>Dars kontenti *</label>
                 <textarea
                   value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, content: e.target.value })
+                  }
                   placeholder="Dars haqida batafsil yozing..."
                   rows={5}
                   required
@@ -334,13 +353,15 @@ function ManageLessons() {
 
               <div className="form-group">
                 <label>
-                  Video URL 
+                  Video URL
                   <span className="form-label-hint">(YouTube yoki Vimeo)</span>
                 </label>
                 <input
                   type="url"
                   value={formData.video_url}
-                  onChange={(e) => setFormData({ ...formData, video_url: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, video_url: e.target.value })
+                  }
                   placeholder="https://youtube.com/watch?v=..."
                 />
               </div>
@@ -351,7 +372,12 @@ function ManageLessons() {
                   <input
                     type="number"
                     value={formData.duration_minutes}
-                    onChange={(e) => setFormData({ ...formData, duration_minutes: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        duration_minutes: e.target.value,
+                      })
+                    }
                     placeholder="15"
                     required
                     min="0"
@@ -363,7 +389,9 @@ function ManageLessons() {
                   <input
                     type="number"
                     value={formData.order}
-                    onChange={(e) => setFormData({ ...formData, order: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, order: e.target.value })
+                    }
                     placeholder="1"
                     required
                     min="1"
@@ -376,7 +404,9 @@ function ManageLessons() {
                   <input
                     type="checkbox"
                     checked={formData.is_free}
-                    onChange={(e) => setFormData({ ...formData, is_free: e.target.checked })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, is_free: e.target.checked })
+                    }
                   />
                   <div className="ml-checkbox-content">
                     <strong>Bu darsni bepul preview qilish</strong>
@@ -400,9 +430,14 @@ function ManageLessons() {
                   disabled={isSaving}
                 >
                   {isSaving ? (
-                    <><Loader2 className="spinner" size={18} /> Saqlanmoqda...</>
+                    <>
+                      <Loader2 className="spinner" size={18} /> Saqlanmoqda...
+                    </>
                   ) : (
-                    <><Save size={18} /> {editingLesson ? 'Yangilash' : 'Qo\'shish'}</>
+                    <>
+                      <Save size={18} />{" "}
+                      {editingLesson ? "Yangilash" : "Qo'shish"}
+                    </>
                   )}
                 </button>
               </div>
@@ -411,7 +446,7 @@ function ManageLessons() {
         </div>
       )}
 
-      {/* ============ DELETE CONFIRM ============ */}
+      {/* DELETE CONFIRM */}
       {deleteConfirm && (
         <div className="modal-overlay" onClick={() => setDeleteConfirm(null)}>
           <motion.div
@@ -425,26 +460,30 @@ function ManageLessons() {
             </div>
             <h3>Darsni o'chirasizmi?</h3>
             <p>
-              <strong>"{deleteConfirm.title}"</strong> darsi o'chiriladi. 
-              Bu amalni qaytarib bo'lmaydi!
+              <strong>"{deleteConfirm.title}"</strong> darsi o'chiriladi. Bu
+              amalni qaytarib bo'lmaydi!
             </p>
             <div className="modal-actions">
-              <button 
+              <button
                 className="btn btn-secondary"
                 onClick={() => setDeleteConfirm(null)}
                 disabled={isDeleting}
               >
                 Bekor qilish
               </button>
-              <button 
+              <button
                 className="btn btn-danger"
                 onClick={handleDelete}
                 disabled={isDeleting}
               >
                 {isDeleting ? (
-                  <><Loader2 className="spinner" size={18} /> O'chirilmoqda...</>
+                  <>
+                    <Loader2 className="spinner" size={18} /> O'chirilmoqda...
+                  </>
                 ) : (
-                  <><Trash2 size={18} /> O'chirish</>
+                  <>
+                    <Trash2 size={18} /> O'chirish
+                  </>
                 )}
               </button>
             </div>
@@ -452,7 +491,7 @@ function ManageLessons() {
         </div>
       )}
     </div>
-  )
+  );
 }
 
-export default ManageLessons
+export default ManageLessons;

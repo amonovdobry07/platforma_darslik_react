@@ -1,0 +1,60 @@
+.theme-toggle {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+}
+
+.theme-toggle:hover {
+  background: var(--bg-elevated);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: var(--color-emerald);
+}
+
+.theme-toggle.dark:hover {
+  color: #6366f1;
+  border-color: rgba(99, 102, 241, 0.4);
+}
+
+.theme-toggle.light:hover {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.4);
+}
+
+.theme-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.theme-toggle.dark .theme-icon {
+  color: #818cf8;
+}
+
+.theme-toggle.light .theme-icon {
+  color: #f59e0b;
+}
+
+/* Pulse effect on click */
+.theme-toggle::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle, currentColor 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.theme-toggle:active::before {
+  opacity: 0.2;
+}

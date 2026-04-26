@@ -3,19 +3,21 @@ import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { 
   BookOpen, 
-  Clock, 
   CheckCircle2, 
   Play,
   Loader2,
-  Search
+  Search,
+  GraduationCap,
+  ShoppingBag
 } from 'lucide-react'
 import { enrollmentsAPI } from '../../api/enrollments'
+import EmptyState from '../../components/ui/EmptyState'
 import './MyCourses.css'
 
 function MyCourses() {
   const [enrollments, setEnrollments] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [filter, setFilter] = useState('all') // all, active, completed
+  const [filter, setFilter] = useState('all')
   const [search, setSearch] = useState('')
 
   useEffect(() => {
@@ -33,13 +35,10 @@ function MyCourses() {
     }
   }
 
-  // Filter qilish
   const filteredEnrollments = enrollments.filter(e => {
-    // Search
     if (search && !e.course?.title.toLowerCase().includes(search.toLowerCase())) {
       return false
     }
-    // Filter
     if (filter === 'active') return !e.is_completed
     if (filter === 'completed') return e.is_completed
     return true
@@ -80,60 +79,61 @@ function MyCourses() {
         </div>
       </motion.div>
 
-      {/* Toolbar */}
-      <div className="mc-toolbar">
-        <div className="mc-search">
-          <Search size={18} />
-          <input
-            type="text"
-            placeholder="Kurs nomini qidirish..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+      {/* Toolbar - faqat kurslar bor bo'lsa */}
+      {enrollments.length > 0 && (
+        <div className="mc-toolbar">
+          <div className="mc-search">
+            <Search size={18} />
+            <input
+              type="text"
+              placeholder="Kurs nomini qidirish..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-        <div className="mc-filters">
-          <button 
-            className={`mc-filter-btn ${filter === 'all' ? 'active' : ''}`}
-            onClick={() => setFilter('all')}
-          >
-            Barchasi ({enrollments.length})
-          </button>
-          <button 
-            className={`mc-filter-btn ${filter === 'active' ? 'active' : ''}`}
-            onClick={() => setFilter('active')}
-          >
-            Faol ({enrollments.filter(e => !e.is_completed).length})
-          </button>
-          <button 
-            className={`mc-filter-btn ${filter === 'completed' ? 'active' : ''}`}
-            onClick={() => setFilter('completed')}
-          >
-            Tugallangan ({enrollments.filter(e => e.is_completed).length})
-          </button>
+          <div className="mc-filters">
+            <button 
+              className={`mc-filter-btn ${filter === 'all' ? 'active' : ''}`}
+              onClick={() => setFilter('all')}
+            >
+              Barchasi ({enrollments.length})
+            </button>
+            <button 
+              className={`mc-filter-btn ${filter === 'active' ? 'active' : ''}`}
+              onClick={() => setFilter('active')}
+            >
+              Faol ({enrollments.filter(e => !e.is_completed).length})
+            </button>
+            <button 
+              className={`mc-filter-btn ${filter === 'completed' ? 'active' : ''}`}
+              onClick={() => setFilter('completed')}
+            >
+              Tugallangan ({enrollments.filter(e => e.is_completed).length})
+            </button>
+          </div>
         </div>
-      </div>
+      )}
 
-      {/* Courses */}
+      {/* Courses yoki Empty State */}
       {filteredEnrollments.length === 0 ? (
-        <div className="mc-empty">
-          <BookOpen size={64} />
-          <h3>
-            {enrollments.length === 0 
-              ? "Hali kurs sotib olmadingiz" 
-              : "Hech narsa topilmadi"}
-          </h3>
-          <p>
-            {enrollments.length === 0 
-              ? "Kurslarni ko'rib chiqing va o'zingizga mos kelganini tanlang" 
-              : "Boshqa so'z bilan qidirib ko'ring"}
-          </p>
-          {enrollments.length === 0 && (
-            <Link to="/courses" className="btn btn-primary">
-              Kurslarni ko'rish
-            </Link>
-          )}
-        </div>
+        enrollments.length === 0 ? (
+          <EmptyState
+            icon={GraduationCap}
+            title="Siz hali kursga yozilmadingiz"
+            description="Bizning katta kurslar to'plamidan o'zingizga mosini tanlang va o'rganishni boshlang!"
+            actionLabel="Kurslar bo'limiga o'tish"
+            actionLink="/courses"
+            actionIcon={ShoppingBag}
+          />
+        ) : (
+          <EmptyState
+            icon={Search}
+            title="Hech narsa topilmadi"
+            description="Qidiruv yoki filter shartlaringizga mos kurs topilmadi. Boshqa so'z bilan qidirib ko'ring."
+            variant="compact"
+          />
+        )
       ) : (
         <div className="mc-grid">
           {filteredEnrollments.map((enrollment, i) => (
@@ -167,7 +167,6 @@ function MyCourses() {
                     {enrollment.course?.instructor?.username}
                   </p>
 
-                  {/* Progress */}
                   <div className="mc-progress-wrapper">
                     <div className="mc-progress-header">
                       <span>Progress</span>

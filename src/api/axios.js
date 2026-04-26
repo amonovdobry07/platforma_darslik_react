@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const API_URL = 'https://darslik-platforma.onrender.com/api'
+const API_URL = import.meta.env.VITE_API_URL || 'https://darslik-platforma-w6cx.onrender.com/api'
 
 const axiosInstance = axios.create({
   baseURL: API_URL,
@@ -9,15 +9,12 @@ const axiosInstance = axios.create({
   },
 })
 
-// Har bir so'rovga avtomatik token qo'shadi
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem('access_token')
   if (token) {
     config.headers.Authorization = `Bearer ${token}`
   }
   
-  // Agar FormData bo'lsa — Content-Type o'chiramiz 
-  // (browser o'zi multipart/form-data qo'shadi)
   if (config.data instanceof FormData) {
     delete config.headers['Content-Type']
   }
@@ -25,7 +22,6 @@ axiosInstance.interceptors.request.use((config) => {
   return config
 })
 
-// Token eskirsa — yangilab oladi
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {

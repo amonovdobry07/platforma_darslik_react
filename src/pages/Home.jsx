@@ -10,7 +10,7 @@ import {
   Shield,
   Trophy,
   Play
-} from 'lucide-react'
+} from 'lucide-react' 
 import './Home.css'
 
 function Home() {
