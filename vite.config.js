@@ -57,7 +57,7 @@ export default defineConfig({
               cacheName: 'google-fonts-cache',
               expiration: {
                 maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365 // 1 yil
+                maxAgeSeconds: 60 * 60 * 24 * 365
               }
             }
           },
@@ -79,17 +79,55 @@ export default defineConfig({
               cacheName: 'images-cache',
               expiration: {
                 maxEntries: 60,
-                maxAgeSeconds: 60 * 60 * 24 * 30 // 30 kun
+                maxAgeSeconds: 60 * 60 * 24 * 30
               }
             }
           }
         ]
       },
       devOptions: {
-        enabled: true // Dev rejimda ham ishlash
+        enabled: true
       }
     })
   ],
+  
+  // ============ BUILD OPTIMIZATSIYA ============
+  build: {
+    // Chunk hajmini cheklash
+    chunkSizeWarningLimit: 1000,
+    
+    rollupOptions: {
+      output: {
+        // Manual chunk splitting — kutubxonalarni ajratish
+        manualChunks: {
+          // React asoslari
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          
+          // UI kutubxonalar
+          'ui-vendor': ['framer-motion', 'lucide-react', 'sonner'],
+          
+          // Charts
+          'charts-vendor': ['recharts'],
+          
+          // Forms
+          'forms-vendor': ['react-hook-form', 'zod', '@hookform/resolvers'],
+          
+          // State
+          'state-vendor': ['zustand', 'axios'],
+        }
+      }
+    },
+    
+    // Minify yaxshiroq
+    minify: 'esbuild',
+    
+    // Source map o'chirish (production'da)
+    sourcemap: false,
+    
+    // CSS code split
+    cssCodeSplit: true,
+  },
+  
   server: {
     port: 5173,
     host: true

@@ -1,0 +1,27 @@
+.loading-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  width: 100%;
+}
+
+.loading-container.full-screen {
+  min-height: 100vh;
+  background: var(--bg-primary);
+}
+
+.loading-spinner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loading-spinner .spinner {
+  color: var(--color-emerald);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
