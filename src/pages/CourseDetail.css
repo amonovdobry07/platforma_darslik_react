@@ -516,3 +516,37 @@
   border-color: var(--border-primary) !important;
   background: var(--bg-surface) !important;
 }
+
+/* ============ FREE BADGE ============ */
+.cd-free-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #10b981, #84cc16);
+  border-radius: var(--radius-full);
+  color: white;
+  font-size: 0.6875rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  text-transform: uppercase;
+}
+
+.cd-price-free {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.cd-price-free svg {
+  color: var(--color-emerald);
+  -webkit-text-fill-color: var(--color-emerald);
+}

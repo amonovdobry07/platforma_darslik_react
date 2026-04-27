@@ -13,7 +13,8 @@ import {
   Lock,
   CheckCircle2,
   Loader2,
-  User as UserIcon
+  ShoppingCart,
+  Gift
 } from 'lucide-react'
 import { coursesAPI } from '../api/courses'
 import { reviewsAPI } from '../api/reviews'
@@ -30,7 +31,6 @@ function CourseDetail() {
   const [course, setCourse] = useState(null)
   const [reviews, setReviews] = useState([])
   const [isLoading, setIsLoading] = useState(true)
-  const [isEnrolling, setIsEnrolling] = useState(false)
   const [isEnrolled, setIsEnrolled] = useState(false)
   const [activeTab, setActiveTab] = useState('overview')
 
@@ -40,7 +40,6 @@ function CourseDetail() {
   const [reviewComment, setReviewComment] = useState('')
   const [isSubmittingReview, setIsSubmittingReview] = useState(false)
 
-  // Ma'lumotlarni yuklash
   useEffect(() => {
     loadCourse()
     loadReviews()
@@ -81,7 +80,8 @@ function CourseDetail() {
     }
   }
 
-  const handleEnroll = async () => {
+  // ✨ ASOSIY O'ZGARISH — endi Checkout sahifaga yo'naltirib yuboramiz
+  const handleEnroll = () => {
     if (!isAuthenticated) {
       toast.error("Avval tizimga kiring!")
       navigate('/login')
@@ -93,17 +93,9 @@ function CourseDetail() {
       return
     }
 
-    setIsEnrolling(true)
-    try {
-      await enrollmentsAPI.enroll(course.id)
-      toast.success("Kursga muvaffaqiyatli yozildingiz! 🎉")
-      setIsEnrolled(true)
-    } catch (error) {
-      const msg = error.response?.data?.detail || "Xatolik yuz berdi"
-      toast.error(msg)
-    } finally {
-      setIsEnrolling(false)
-    }
+    // Bepul yoki pullik bo'lishidan qat'i nazar — Checkout sahifaga yo'naltirish
+    // Checkout sahifasi o'zi bepul/pullik holatini boshqaradi
+    navigate(`/checkout/${course.id}`)
   }
 
   const handleSubmitReview = async (e) => {
@@ -142,7 +134,7 @@ function CourseDetail() {
   }
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('uz-UZ').format(price) + " so'm"
+    return new Intl.NumberFormat('uz-UZ').format(price)
   }
 
   const levelLabels = {
@@ -150,6 +142,9 @@ function CourseDetail() {
     intermediate: "O'rta",
     advanced: "Yuqori"
   }
+
+  // Bepul yoki pullik
+  const isFree = parseFloat(course?.price || 0) === 0
 
   if (isLoading) {
     return (
@@ -235,11 +230,30 @@ function CourseDetail() {
                 <div className={`cd-level level-${course.level}`}>
                   {levelLabels[course.level]}
                 </div>
+
+                {/* Bepul kurs uchun badge */}
+                {isFree && (
+                  <div className="cd-free-badge">
+                    <Gift size={14} />
+                    BEPUL
+                  </div>
+                )}
               </div>
 
               <div className="cd-enroll-body">
-                <div className="cd-price">{formatPrice(course.price)}</div>
+                {/* Narx */}
+                {isFree ? (
+                  <div className="cd-price cd-price-free">
+                    <Gift size={28} />
+                    <span>Bepul</span>
+                  </div>
+                ) : (
+                  <div className="cd-price">
+                    {formatPrice(course.price)} so'm
+                  </div>
+                )}
 
+                {/* Tugma */}
                 {isEnrolled ? (
                   <Link 
                     to={`/courses/${course.id}/lessons`}
@@ -256,15 +270,17 @@ function CourseDetail() {
                   <button 
                     className="btn btn-primary btn-lg cd-enroll-btn"
                     onClick={handleEnroll}
-                    disabled={isEnrolling}
                   >
-                    {isEnrolling ? (
+                    {isFree ? (
                       <>
-                        <Loader2 className="spinner" size={20} />
-                        Kuting...
+                        <Gift size={20} />
+                        Bepul yozilish
                       </>
                     ) : (
-                      'Kursga yozilish'
+                      <>
+                        <ShoppingCart size={20} />
+                        Sotib olish
+                      </>
                     )}
                   </button>
                 )}
@@ -282,6 +298,12 @@ function CourseDetail() {
                     <Award size={16} />
                     Tugatgach sertifikat
                   </div>
+                  {!isFree && (
+                    <div className="cd-feature">
+                      <CheckCircle2 size={16} />
+                      Cheksiz kirish
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>

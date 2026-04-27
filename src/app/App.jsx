@@ -26,6 +26,7 @@ import EditCourse from "../pages/dashboard/EditCourse";
 import ManageQuiz from "../pages/dashboard/ManageQuiz";
 import InstructorStats from "../pages/dashboard/InstructorStats";
 import useThemeStore from "../store/themeStore";
+import Checkout from "../pages/Checkout";
 
 function App() {
   const { isAuthenticated, setUser, logout } = useAuthStore();
@@ -71,9 +72,10 @@ function App() {
           <Route path="register" element={<Register />} />
         </Route>
 
-        {/* ============ PROFILE (Auth required) ============ */}
+        {/* ============ PROFILE & CHECKOUT (Auth required) ============ */}
         <Route element={<ProtectedRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/checkout/:courseId" element={<Checkout />} />
         </Route>
 
         {/* ============ LESSON VIEWER ============ */}

@@ -1,226 +1,358 @@
-import { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { useState, useEffect } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Search,
+  Filter,
   X,
-  BookOpen,
+  Loader2,
+  TrendingUp,
+  Clock,
+  DollarSign,
+  Star,
   SlidersHorizontal,
-  RotateCcw,
-} from "lucide-react";
-import CourseCard from "../components/course/CourseCard";
-import { coursesAPI, categoriesAPI } from "../api/courses";
-import { CourseCardSkeleton } from "../components/ui/Skeleton";
-import EmptyState from "../components/ui/EmptyState";
-import "./Courses.css";
+  Gift,
+  CreditCard,
+  BookOpen
+} from 'lucide-react'
+import { coursesAPI } from '../api/courses'
+import CourseCard from '../components/course/CourseCard'
+import EmptyState from '../components/ui/EmptyState'
+import './Courses.css'
 
 function Courses() {
-  const [courses, setCourses] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-
-  // Filter states
-  const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedLevel, setSelectedLevel] = useState("");
-  const [ordering, setOrdering] = useState("-created_at");
+  const [searchParams, setSearchParams] = useSearchParams()
+  
+  const [courses, setCourses] = useState([])
+  const [categories, setCategories] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [showMobileFilters, setShowMobileFilters] = useState(false)
+  
+  // Filter holatlari (URL'dan o'qiymiz)
+  const [filters, setFilters] = useState({
+    search: searchParams.get('search') || '',
+    category: searchParams.get('category') || 'all',
+    level: searchParams.get('level') || 'all',
+    price_type: searchParams.get('price_type') || 'all',
+    sort: searchParams.get('sort') || 'popular'
+  })
 
   // Kategoriyalarni yuklash
   useEffect(() => {
-    categoriesAPI
-      .getAll()
-      .then((data) => setCategories(data.results || data))
-      .catch((err) => console.error(err));
-  }, []);
+    loadCategories()
+  }, [])
 
-  // Kurslarni yuklash (filter o'zgarganda)
+  // Filter o'zgarganda kurslarni qaytadan yuklash
   useEffect(() => {
-    setIsLoading(true);
-    const params = {};
-
-    if (search) params.search = search;
-    if (selectedCategory) params.category = selectedCategory;
-    if (selectedLevel) params.level = selectedLevel;
-    if (ordering) params.ordering = ordering;
-
     const debounce = setTimeout(() => {
-      coursesAPI
-        .getAll(params)
-        .then((data) => {
-          setCourses(data.results || data);
-          setIsLoading(false);
-        })
-        .catch((err) => {
-          console.error(err);
-          setIsLoading(false);
-        });
-    }, 300);
+      loadCourses()
+      updateURL()
+    }, 300) // 300ms debounce
 
-    return () => clearTimeout(debounce);
-  }, [search, selectedCategory, selectedLevel, ordering]);
+    return () => clearTimeout(debounce)
+  }, [filters])
 
-  const clearFilters = () => {
-    setSearch("");
-    setSelectedCategory("");
-    setSelectedLevel("");
-    setOrdering("-created_at");
-  };
+  const loadCategories = async () => {
+    try {
+      const data = await coursesAPI.getCategories()
+      setCategories(data.results || data)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-  const hasActiveFilters = search || selectedCategory || selectedLevel;
+  const loadCourses = async () => {
+    setIsLoading(true)
+    try {
+      // Bo'sh maydonlarni yubormaslik uchun tozalash
+      const params = {}
+      Object.keys(filters).forEach(key => {
+        if (filters[key] && filters[key] !== 'all') {
+          params[key] = filters[key]
+        }
+      })
+
+      const data = await coursesAPI.getAll(params)
+      setCourses(data.results || data)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const updateURL = () => {
+    const params = new URLSearchParams()
+    Object.keys(filters).forEach(key => {
+      if (filters[key] && filters[key] !== 'all' && filters[key] !== 'popular') {
+        params.set(key, filters[key])
+      }
+    })
+    setSearchParams(params)
+  }
+
+  const handleFilterChange = (key, value) => {
+    setFilters({ ...filters, [key]: value })
+  }
+
+  const resetFilters = () => {
+    setFilters({
+      search: '',
+      category: 'all',
+      level: 'all',
+      price_type: 'all',
+      sort: 'popular'
+    })
+  }
+
+  const activeFiltersCount = Object.keys(filters).filter(key => {
+    if (key === 'search') return filters[key].trim() !== ''
+    if (key === 'sort') return false
+    return filters[key] !== 'all'
+  }).length
 
   return (
     <div className="courses-page">
-      <div className="container">
-        {/* ============ HEADER ============ */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="courses-header"
-        >
-          <h1>
-            Barcha <span className="gradient-text">kurslar</span>
-          </h1>
-          <p>O'zingizga mos kursni toping va o'rganishni boshlang</p>
-        </motion.div>
+      {/* ============ HEADER ============ */}
+      <section className="courses-header">
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <h1>
+              <span className="gradient-text">Kurslarni</span> kashf eting
+            </h1>
+            <p>
+              {courses.length > 0 
+                ? `${courses.length} ta kurs mavjud` 
+                : 'Sizga mos kursni toping'
+              }
+            </p>
+          </motion.div>
 
-        {/* ============ SEARCH & TOGGLE ============ */}
-        <div className="courses-toolbar">
-          <div className="search-wrapper">
-            <Search className="search-icon" size={20} />
+          {/* SEARCH BAR */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="search-bar"
+          >
+            <Search size={20} className="search-icon" />
             <input
               type="text"
-              placeholder="Kurs nomini qidiring..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Kurs nomi yoki o'qituvchi nomini kiriting..."
+              value={filters.search}
+              onChange={(e) => handleFilterChange('search', e.target.value)}
               className="search-input"
             />
-            {search && (
-              <button className="search-clear" onClick={() => setSearch("")}>
+            {filters.search && (
+              <button
+                className="search-clear"
+                onClick={() => handleFilterChange('search', '')}
+              >
                 <X size={18} />
               </button>
             )}
-          </div>
-
-          <button
-            className={`filter-toggle ${isFilterOpen ? "active" : ""}`}
-            onClick={() => setIsFilterOpen(!isFilterOpen)}
-          >
-            <SlidersHorizontal size={18} />
-            <span>Filter</span>
-            {hasActiveFilters && <span className="filter-dot"></span>}
-          </button>
-        </div>
-
-        {/* ============ FILTERS ============ */}
-        {isFilterOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="filters-panel"
-          >
-            <div className="filter-row">
-              {/* Category */}
-              <div className="filter-group">
-                <label>Kategoriya</label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="">Barchasi</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Level */}
-              <div className="filter-group">
-                <label>Daraja</label>
-                <select
-                  value={selectedLevel}
-                  onChange={(e) => setSelectedLevel(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="">Barchasi</option>
-                  <option value="beginner">Boshlang'ich</option>
-                  <option value="intermediate">O'rta</option>
-                  <option value="advanced">Yuqori</option>
-                </select>
-              </div>
-
-              {/* Ordering */}
-              <div className="filter-group">
-                <label>Saralash</label>
-                <select
-                  value={ordering}
-                  onChange={(e) => setOrdering(e.target.value)}
-                  className="filter-select"
-                >
-                  <option value="-created_at">Eng yangi</option>
-                  <option value="created_at">Eng eski</option>
-                  <option value="price">Narxi: past → yuqori</option>
-                  <option value="-price">Narxi: yuqori → past</option>
-                </select>
-              </div>
-
-              {hasActiveFilters && (
-                <button className="clear-filters-btn" onClick={clearFilters}>
-                  <X size={16} />
-                  Tozalash
-                </button>
-              )}
-            </div>
           </motion.div>
-        )}
-
-        {/* ============ RESULTS ============ */}
-        <div className="courses-results">
-          {isLoading ? (
-            <div className="courses-grid">
-              {[...Array(6)].map((_, i) => (
-                <CourseCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : courses.length === 0 ? (
-            <EmptyState
-              icon={hasActiveFilters ? Search : BookOpen}
-              title={
-                hasActiveFilters
-                  ? "Kurs topilmadi"
-                  : "Hozircha kurslar yo'q"
-              }
-              description={
-                hasActiveFilters
-                  ? "Qidiruv shartlaringizga mos kurs topilmadi. Boshqa so'z bilan qidirib ko'ring yoki filterlarni tozalang."
-                  : "Tez orada yangi kurslar qo'shiladi. Iltimos keyinroq qaytib keling!"
-              }
-              actionLabel={hasActiveFilters ? "Filterlarni tozalash" : null}
-              actionIcon={RotateCcw}
-              actionOnClick={clearFilters}
-            />
-          ) : (
-            <>
-              <div className="courses-count">
-                <span className="gradient-text">{courses.length}</span> ta kurs
-                topildi
-              </div>
-
-              <div className="courses-grid">
-                {courses.map((course, i) => (
-                  <CourseCard key={course.id} course={course} index={i} />
-                ))}
-              </div>
-            </>
-          )}
         </div>
-      </div>
+      </section>
+
+      {/* ============ MAIN CONTENT ============ */}
+      <section className="courses-main">
+        <div className="container">
+          <div className="courses-layout">
+            {/* ============ FILTERS SIDEBAR ============ */}
+            <aside className={`filters-sidebar ${showMobileFilters ? 'active' : ''}`}>
+              <div className="filters-header">
+                <h3>
+                  <SlidersHorizontal size={18} />
+                  Filterlar
+                  {activeFiltersCount > 0 && (
+                    <span className="filter-badge">{activeFiltersCount}</span>
+                  )}
+                </h3>
+                
+                <button 
+                  className="filters-close-mobile"
+                  onClick={() => setShowMobileFilters(false)}
+                >
+                  <X size={20} />
+                </button>
+
+                {activeFiltersCount > 0 && (
+                  <button className="filter-reset" onClick={resetFilters}>
+                    Tozalash
+                  </button>
+                )}
+              </div>
+
+              {/* KATEGORIYA */}
+              <div className="filter-group">
+                <label className="filter-label">Kategoriya</label>
+                <div className="filter-options">
+                  <button
+                    className={`filter-option ${filters.category === 'all' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('category', 'all')}
+                  >
+                    <BookOpen size={16} />
+                    <span>Hammasi</span>
+                  </button>
+                  {categories.map(cat => (
+                    <button
+                      key={cat.id}
+                      className={`filter-option ${filters.category === cat.slug ? 'active' : ''}`}
+                      onClick={() => handleFilterChange('category', cat.slug)}
+                    >
+                      <span>{cat.name}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* DARAJA */}
+              <div className="filter-group">
+                <label className="filter-label">Daraja</label>
+                <div className="filter-options">
+                  <button
+                    className={`filter-option ${filters.level === 'all' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('level', 'all')}
+                  >
+                    Hammasi
+                  </button>
+                  <button
+                    className={`filter-option ${filters.level === 'beginner' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('level', 'beginner')}
+                  >
+                    Boshlang'ich
+                  </button>
+                  <button
+                    className={`filter-option ${filters.level === 'intermediate' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('level', 'intermediate')}
+                  >
+                    O'rta
+                  </button>
+                  <button
+                    className={`filter-option ${filters.level === 'advanced' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('level', 'advanced')}
+                  >
+                    Yuqori
+                  </button>
+                </div>
+              </div>
+
+              {/* NARX TURI */}
+              <div className="filter-group">
+                <label className="filter-label">Narx</label>
+                <div className="filter-options">
+                  <button
+                    className={`filter-option ${filters.price_type === 'all' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('price_type', 'all')}
+                  >
+                    Hammasi
+                  </button>
+                  <button
+                    className={`filter-option ${filters.price_type === 'free' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('price_type', 'free')}
+                  >
+                    <Gift size={16} />
+                    <span>Bepul</span>
+                  </button>
+                  <button
+                    className={`filter-option ${filters.price_type === 'paid' ? 'active' : ''}`}
+                    onClick={() => handleFilterChange('price_type', 'paid')}
+                  >
+                    <CreditCard size={16} />
+                    <span>Pullik</span>
+                  </button>
+                </div>
+              </div>
+            </aside>
+
+            {/* ============ COURSES LIST ============ */}
+            <main className="courses-content">
+              {/* Toolbar */}
+              <div className="courses-toolbar">
+                <button 
+                  className="filter-btn-mobile"
+                  onClick={() => setShowMobileFilters(true)}
+                >
+                  <Filter size={18} />
+                  <span>Filterlar</span>
+                  {activeFiltersCount > 0 && (
+                    <span className="filter-badge">{activeFiltersCount}</span>
+                  )}
+                </button>
+
+                <div className="sort-dropdown">
+                  <label>Saralash:</label>
+                  <select
+                    value={filters.sort}
+                    onChange={(e) => handleFilterChange('sort', e.target.value)}
+                    className="sort-select"
+                  >
+                    <option value="popular">🔥 Eng mashhur</option>
+                    <option value="newest">✨ Eng yangi</option>
+                    <option value="oldest">📅 Eng eski</option>
+                    <option value="cheapest">💰 Eng arzon</option>
+                    <option value="expensive">💎 Eng qimmat</option>
+                    <option value="rating">⭐ Reyting bo'yicha</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Results */}
+              {isLoading ? (
+                <div className="courses-loading">
+                  <Loader2 className="spinner" size={40} />
+                </div>
+              ) : courses.length > 0 ? (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="courses-grid"
+                >
+                  <AnimatePresence>
+                    {courses.map((course, i) => (
+                      <motion.div
+                        key={course.id}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        transition={{ delay: i * 0.05 }}
+                      >
+                        <CourseCard course={course} />
+                      </motion.div>
+                    ))}
+                  </AnimatePresence>
+                </motion.div>
+              ) : (
+                <EmptyState
+                  icon={Search}
+                  title="Kurs topilmadi"
+                  description={
+                    filters.search 
+                      ? `"${filters.search}" bo'yicha hech narsa topilmadi` 
+                      : "Filter sozlamalarini o'zgartiring"
+                  }
+                  actionLabel="Filterlarni tozalash"
+                  actionOnClick={resetFilters}
+                />
+              )}
+            </main>
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile filters overlay */}
+      {showMobileFilters && (
+        <div 
+          className="filters-overlay" 
+          onClick={() => setShowMobileFilters(false)}
+        ></div>
+      )}
     </div>
-  );
+  )
 }
 
-export default Courses;
+export default Courses
