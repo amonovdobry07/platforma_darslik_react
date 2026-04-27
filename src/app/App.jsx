@@ -27,6 +27,7 @@ import ManageQuiz from "../pages/dashboard/ManageQuiz";
 import InstructorStats from "../pages/dashboard/InstructorStats";
 import useThemeStore from "../store/themeStore";
 import Checkout from "../pages/Checkout";
+import InstallPrompt from "../components/ui/InstallPrompt";
 
 function App() {
   const { isAuthenticated, setUser, logout } = useAuthStore();
@@ -61,6 +62,7 @@ function App() {
           },
         }}
       />
+      <InstallPrompt />
       <Routes>
         {/* ============ PUBLIC ROUTES (Layout bilan) ============ */}
         <Route path="/" element={<Layout />}>

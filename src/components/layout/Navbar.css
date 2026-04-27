@@ -1,11 +1,20 @@
+/* ============================================
+   NAVBAR - TO'LIQ STYLLAR (BUG TUZATILDI)
+   ============================================ */
+
 .navbar {
   position: sticky;
   top: 0;
-  z-index: var(--z-dropdown);
-  background: rgba(10, 10, 10, 0.8);
+  z-index: 1000; /* ← MOBILE MENUDAN YUQORI! */
+  background: rgba(10, 10, 10, 0.85);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-primary);
+  transition: background 0.3s ease;
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .navbar-container {
@@ -13,40 +22,63 @@
   align-items: center;
   justify-content: space-between;
   height: 70px;
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg);
+  max-width: 1280px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1001;
 }
 
+/* ============ LOGO ============ */
 .navbar-logo {
   display: flex;
   align-items: center;
-  gap: var(--space-sm);
+  gap: 0.5rem;
   font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--text-primary);
+  text-decoration: none;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1002;
 }
 
 .navbar-logo svg {
   color: var(--color-emerald);
 }
 
-/* ============ DESKTOP NAV ============ */
+.navbar-logo:hover {
+  color: var(--text-primary);
+}
+
+/* ============ DESKTOP LINKS ============ */
 .navbar-links {
   display: flex;
-  gap: var(--space-xl);
+  align-items: center;
+  gap: 0.5rem;
   list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1;
+  justify-content: center;
 }
 
 .navbar-links a {
   color: var(--text-secondary);
+  font-size: 0.9375rem;
   font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-md);
+  transition: all 0.15s ease;
+  text-decoration: none;
   position: relative;
-  padding: var(--space-sm) 0;
-  transition: color var(--transition-fast);
 }
 
 .navbar-links a:hover {
   color: var(--text-primary);
+  background: var(--bg-elevated);
 }
 
 .navbar-links a.active {
@@ -56,55 +88,21 @@
 .navbar-links a.active::after {
   content: '';
   position: absolute;
+  left: 50%;
   bottom: -2px;
-  left: 0;
-  right: 0;
+  width: 24px;
   height: 2px;
   background: var(--gradient-primary);
-  border-radius: var(--radius-full);
+  transform: translateX(-50%);
+  border-radius: 999px;
 }
 
+/* ============ DESKTOP ACTIONS ============ */
 .navbar-actions {
   display: flex;
   align-items: center;
-  gap: var(--space-md);
-}
-
-/* ============ BUTTONS ============ */
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-sm);
-  padding: 0.625rem 1.25rem;
-  border-radius: var(--radius-md);
-  font-weight: 600;
-  font-size: 0.9375rem;
-  transition: all var(--transition-base);
-  cursor: pointer;
-  white-space: nowrap;
-}
-
-.btn-ghost {
-  color: var(--text-secondary);
-  background: transparent;
-}
-
-.btn-ghost:hover {
-  color: var(--text-primary);
-  background: var(--bg-surface);
-}
-
-.btn-primary {
-  background: var(--gradient-primary);
-  color: #0a0a0a;
-  font-weight: 700;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--glow-emerald);
-  color: #0a0a0a;
+  gap: 0.5rem;
+  flex-shrink: 0;
 }
 
 .btn-icon {
@@ -113,51 +111,103 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: transparent;
+  border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
   color: var(--text-secondary);
-  background: transparent;
-  transition: all var(--transition-fast);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
 }
 
 .btn-icon:hover {
-  color: var(--text-accent);
-  background: var(--bg-surface);
+  background: var(--bg-elevated);
+  color: var(--color-emerald);
+  border-color: rgba(16, 185, 129, 0.3);
 }
 
-/* ============ HAMBURGER (MOBILE) ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-primary);
+}
+
+.btn-ghost:hover {
+  background: var(--bg-elevated);
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+}
+
+/* ============ HAMBURGER (mobile only) ============ */
 .navbar-hamburger {
   display: none;
-  width: 44px;
-  height: 44px;
+  width: 40px;
+  height: 40px;
   align-items: center;
   justify-content: center;
-  color: var(--text-primary);
   background: transparent;
+  border: 1px solid var(--border-primary);
   border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  z-index: 1002;
+  flex-shrink: 0;
 }
 
 .navbar-hamburger:hover {
-  background: var(--bg-surface);
+  background: var(--bg-elevated);
+  border-color: rgba(16, 185, 129, 0.3);
   color: var(--color-emerald);
 }
 
-/* ============ MOBILE MENU ============ */
+/* ============================================
+   MOBILE MENU — NAVBAR'NING PASTIDA OCHILADI
+   ============================================ */
+
 .mobile-menu {
   position: fixed;
-  top: 70px;
+  top: 70px; /* ← NAVBAR BALANDLIGI! */
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(10, 10, 10, 0.98);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  z-index: var(--z-modal);
+  background: var(--bg-primary);
+  z-index: 999; /* ← NAVBAR'DAN PAST! */
+  overflow-y: auto;
+  
   opacity: 0;
   visibility: hidden;
   transform: translateX(100%);
-  transition: all var(--transition-base);
-  overflow-y: auto;
+  transition: 
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .mobile-menu.active {
@@ -167,134 +217,218 @@
 }
 
 .mobile-menu-content {
-  padding: var(--space-xl) var(--space-lg);
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  padding: var(--space-xl) var(--space-lg) var(--space-2xl);
+  max-width: 500px;
+  margin: 0 auto;
+  width: 100%;
 }
 
+/* ============ MOBILE LINKS ============ */
 .mobile-menu-links {
   list-style: none;
+  padding: 0;
+  margin: 0 0 var(--space-lg) 0;
   display: flex;
   flex-direction: column;
-  gap: var(--space-xs);
+  gap: 0.5rem;
 }
 
-.mobile-menu-links a {
+.mobile-menu-links li {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: 
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.active .mobile-menu-links li {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.mobile-menu.active .mobile-menu-links li:nth-child(1) { transition-delay: 0.15s; }
+.mobile-menu.active .mobile-menu-links li:nth-child(2) { transition-delay: 0.20s; }
+.mobile-menu.active .mobile-menu-links li:nth-child(3) { transition-delay: 0.25s; }
+
+.mobile-menu-links li a {
   display: block;
-  padding: var(--space-md) var(--space-lg);
-  color: var(--text-secondary);
-  font-size: 1.125rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 1.0625rem;
   font-weight: 500;
-  border-radius: var(--radius-md);
-  transition: all var(--transition-fast);
+  text-decoration: none;
+  transition: all 0.15s ease;
 }
 
-.mobile-menu-links a:hover,
-.mobile-menu-links a.active {
+.mobile-menu-links li a:hover,
+.mobile-menu-links li a.active {
   background: var(--gradient-subtle);
+  border-color: var(--color-emerald);
   color: var(--text-accent);
+  transform: translateX(4px);
 }
 
+/* ============ DIVIDER ============ */
 .mobile-menu-divider {
   height: 1px;
   background: var(--border-primary);
-  margin: var(--space-sm) 0;
+  margin: var(--space-lg) 0;
+  opacity: 0;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: 
+    opacity 0.4s ease,
+    transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.mobile-menu-actions {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-sm);
+.mobile-menu.active .mobile-menu-divider {
+  opacity: 1;
+  transform: scaleX(1);
+  transition-delay: 0.3s;
 }
 
-.mobile-menu-item {
-  display: flex;
-  align-items: center;
-  gap: var(--space-md);
-  padding: var(--space-md) var(--space-lg);
-  color: var(--text-secondary);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-primary);
-  border-radius: var(--radius-md);
-  font-weight: 500;
-  transition: all var(--transition-fast);
-  width: 100%;
-  text-align: left;
-}
-
-.mobile-menu-item:hover {
-  background: var(--bg-elevated);
-  border-color: var(--color-emerald);
-  color: var(--text-primary);
-}
-
-.mobile-menu-logout {
-  color: #ef4444;
-}
-
-.mobile-menu-logout:hover {
-  border-color: #ef4444;
-  color: #ef4444;
-}
-
-.mobile-btn {
-  width: 100%;
-  justify-content: center;
-  padding: 0.875rem 1.5rem;
-  font-size: 1rem;
-}
-
-/* ============ RESPONSIVE ============ */
-@media (max-width: 1024px) {
-  .navbar-links {
-    gap: var(--space-lg);
-  }
-}
-
-@media (max-width: 768px) {
-  .navbar-container {
-    height: 64px;
-  }
-
-  .navbar-logo {
-    font-size: 1.25rem;
-  }
-
-  .navbar-logo svg {
-    width: 24px;
-    height: 24px;
-  }
-
-  /* Desktop elementlarni yashiramiz */
-  .navbar-links,
-  .navbar-actions {
-    display: none;
-  }
-
-  /* Hamburger ko'rsatamiz */
-  .navbar-hamburger {
-    display: flex;
-  }
-
-  .mobile-menu {
-    top: 64px;
-  }
-}
-
-/* ============ MOBILE THEME SECTION ============ */
+/* ============ THEME SECTION (mobile) ============ */
 .mobile-theme-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--space-md);
+  padding: 1rem 1.5rem;
   background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
   border-radius: var(--radius-lg);
-  margin: var(--space-md) 0;
+  margin: 1rem 0;
+  
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.active .mobile-theme-section {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.35s;
 }
 
 .mobile-theme-section span {
   font-size: 0.9375rem;
   font-weight: 500;
   color: var(--text-primary);
+}
+
+/* ============ MOBILE ACTIONS ============ */
+.mobile-menu-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: var(--space-lg);
+}
+
+.mobile-menu-actions > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 
+    opacity 0.4s ease,
+    transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-menu.active .mobile-menu-actions > *:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.40s;
+}
+
+.mobile-menu.active .mobile-menu-actions > *:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.45s;
+}
+
+.mobile-menu.active .mobile-menu-actions > *:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 0.50s;
+}
+
+/* ============ MOBILE MENU ITEMS ============ */
+.mobile-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.15s ease;
+  width: 100%;
+  text-align: left;
+  font-family: inherit;
+}
+
+.mobile-menu-item:hover {
+  background: var(--gradient-subtle);
+  border-color: var(--color-emerald);
+  color: var(--text-accent);
+  transform: translateX(4px);
+}
+
+.mobile-menu-item svg {
+  color: var(--color-emerald);
+  flex-shrink: 0;
+}
+
+.mobile-menu-logout {
+  background: rgba(239, 68, 68, 0.05);
+  border-color: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+
+.mobile-menu-logout:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #ef4444;
+  color: #ef4444;
+}
+
+.mobile-menu-logout svg {
+  color: #ef4444;
+}
+
+.mobile-btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.btn-lg {
+  padding: 0.875rem 1.5rem;
+  font-size: 1rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+
+@media (max-width: 968px) {
+  .navbar-links,
+  .navbar-actions {
+    display: none;
+  }
+
+  .navbar-hamburger {
+    display: flex;
+  }
+}
+
+@media (min-width: 969px) {
+  .mobile-menu {
+    display: none !important;
+  }
 }
