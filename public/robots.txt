@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Yopiq sahifalar
+Disallow: /dashboard/
+Disallow: /profile
+Disallow: /checkout/
+Disallow: /api/
+
+# Sitemap
+Sitemap: https://amonoff-platform.netlify.app/sitemap.xml
